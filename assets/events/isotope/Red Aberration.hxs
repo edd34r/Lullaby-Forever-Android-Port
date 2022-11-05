@@ -1,0 +1,36 @@
+
+var intensity:Float = 0;
+var falseIntensity:Float = 0;
+var oldStep:Int = 0;
+function eventFunction(params) {
+    var newIntensity = Std.parseFloat(params[0]);
+    if (Math.isNaN(newIntensity))
+        newIntensity = 0;
+    var newStart = Std.parseFloat(params[1]);
+    if (Math.isNaN(newStart))
+        newStart = 1;
+    intensity = newIntensity;
+}
+
+function onUpdate(elapsed) {
+    var newStep:Int = Std.int(Conductor.songPosition / (Conductor.stepCrochet * 16));
+    //
+    falseIntensity = FlxMath.lerp( falseIntensity, 0, elapsed * 2 );
+    // trace(falseIntensity);
+    if (oldStep != newStep && newStep > oldStep) {
+        // trace('the bumper');
+        falseIntensity = intensity;
+        oldStep = newStep;
+    }
+}
+
+function initFunction(params) {
+    if (PlayState.staticValues.get('glitchySet') == null) {
+        trace('its happening?? idk');
+        PlayState.staticValues.set('glitchySet', true);
+    }
+
+    if (PlayState.staticValues.get('vignetteSet') == null) {
+        PlayState.staticValues.set('vignetteSet', true);
+    }
+}
